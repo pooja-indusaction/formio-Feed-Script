@@ -1,0 +1,27 @@
+import csv
+
+def csv_to_js(csv_file_path, js_file_path):
+    translations = []
+    
+    # Read from the CSV file
+    with open(csv_file_path, mode='r', encoding='utf-8') as csv_file:
+        csv_reader = csv.reader(csv_file)
+        next(csv_reader)  # Skip the header row
+        
+        for row in csv_reader:
+            key, value = row
+            translations.append({"key": key, "value": value})
+    
+    # Write to the JS file
+    with open(js_file_path, mode='w', encoding='utf-8') as js_file:
+        js_file.write("const translations = ")
+        js_file.write(json.dumps(translations, ensure_ascii=False, indent=4))
+        js_file.write(";")
+        
+    print(f"Translations have been successfully saved to {js_file_path}.")
+
+# Replace with your file paths
+csv_file_path = 'CMS Translations - translations.csv'  # Input CSV file path
+js_file_path = 'translations.js'  # Output JS file path
+
+csv_to_js(csv_file_path, js_file_path)
