@@ -1,41 +1,52 @@
-// Function to click the "Add Another" button and add a new row
-function addRow() {
-    const addFieldButton = document.querySelector('button[ref="datagrid-translations-addRow"]');
-    
+function addRowAndFill(index) {
+  return new Promise((resolve) => {
+    const addFieldButton = document.querySelector(
+      'button[ref="datagrid-translations-addRow"]'
+    );
+
     if (!addFieldButton) {
-        console.error("Add field button not found!");
-        return;
+      console.error("Add field button not found!");
+      return;
     }
 
-    // Click the "Add Another" button
+    // Click "Add Another" button
     addFieldButton.click();
-}
 
-// Function to fill the rows with translation values and trigger input events
-function fillRows() {
-    const rows = document.querySelectorAll('tr[ref="datagrid-translations-row"]');
-    
-    rows.forEach((row, index) => {
-        if (index < translations.length) {
-            // Fill the key input
-            const keyInput = row.querySelector('td[ref="datagrid-translations"] input[type="text"]');
-            if (keyInput) {
-                keyInput.value = translations[index].key;
-                keyInput.dispatchEvent(new Event('input')); // Trigger the input event
-            }
-            
-            // Fill the value input (second input inside the same row)
-            const valueInput = row.querySelectorAll('td[ref="datagrid-translations"] input[type="text"]')[1];
-            if (valueInput) {
-                valueInput.value = translations[index].value;
-                valueInput.dispatchEvent(new Event('input')); // Trigger the input event
-            }
+    // Wait for row to be added before filling it
+    setTimeout(() => {
+      const rows = document.querySelectorAll(
+        'tr[ref="datagrid-translations-row"]'
+      );
+      const newRow = rows[rows.length - 1]; // Get the last added row
+
+      if (newRow) {
+        const keyInput = newRow.querySelector(
+          'td[ref="datagrid-translations"] input[type="text"]'
+        );
+        if (keyInput) {
+          keyInput.value = translations[index].key;
+          keyInput.dispatchEvent(new Event("input"));
         }
-    });
+
+        const valueInput = newRow.querySelectorAll(
+          'td[ref="datagrid-translations"] input[type="text"]'
+        )[1];
+        if (valueInput) {
+          valueInput.value = translations[index].value;
+          valueInput.dispatchEvent(new Event("input"));
+        }
+      }
+      resolve(); // Resolve the promise after filling
+    }, 500);
+  });
 }
 
-// Add rows based on translations array length and fill them with values
-for (let i = 0; i < translations.length; i++) {
-    addRow();  // Add a new row
-    setTimeout(fillRows, 500); // Fill rows after they are added (wait for DOM update)
+// Function to add rows sequentially
+async function addAllRows() {
+  for (let i = 0; i < translations.length; i++) {
+    await addRowAndFill(i); // Wait for each row to be added & filled before continuing
+  }
 }
+
+// Start adding rows
+addAllRows();
