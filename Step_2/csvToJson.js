@@ -52,7 +52,7 @@ function csvOrXlsxToJs(filePath, jsFilePath) {
 }
 
 // Replace with your file paths
-const filePath = "Survey [Punjab UDID Calling] - formlabel.csv"; // Input file path (.csv or .xlsx)
+const filePath = "Lakhpati_Didi_Hindi_translations - Sheet1.csv"; // Input file path (.csv or .xlsx)
 const jsFilePath = "translationsUDID.js"; // Output JS file path. This will create a new file if it does not exist within the folder
 
 try {
